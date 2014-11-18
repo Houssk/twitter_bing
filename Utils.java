@@ -143,45 +143,95 @@ public static String formateNews(String titre, String source, String date) {
        return element_formate;
        
 	}
-	
+/**
+ * @author Julien Tissier
+ * @version 0.1, ecrit le 18 Novembre 2014
+ * 
+ * Methode qui place des espaces au bon endroit dans une phrase.
+ * Par exemple, elle transforme 
+ * 
+ * @param phrase   String  C'est la phrase a laquelle on doit ajouter des espaces
+ *  
+ * @return  String     Elle renvoie un String qui est le decoupage de maniere
+ *                      intelligente de la phrase.
+ */	
     public static String decoupage_intelligent(String phrase)
     {
+        // ceci est notre variable de sortie
         String res = "";
+        
+        /* on va parcourir notre phrase de la gauche vers la droite,
+         * lettre par lettre. On commence en selectionnant seulement
+         * une lettre. cela donne un premier sous-mot (sub)
+         */
         int start = 0;
         int end   = 1;
         int l = phrase.length();
         
         while (start < (l - 1))
         {
+            /* On compte le nombre de resultats Bing News (n)
+             * si on effectue une recherche sur cette lettre.
+             */
             String sub = phrase.substring(start, end);
             Long n = BingSearch.nombreResultats(sub);
             
             while (end < l)
             {
+                // On ajoute ensuite une lettre a ce sous-mot. Ce qui forme
+                // un deuxieme sous-mot (sub2)
                 end += 1;
                 String sub2 = phrase.substring(start, end);
-                Long m = BingSearch.nombreResultats(sub2);
                 
+                
+                /* On compte a nouveau le nombre de resultats Bing News (m)
+                 * de ce nouveau sous-mot. Deux cas sont possibles :
+                 * 
+                 *  - soit notre premier sous-mot (sub) etait un mot entier
+                 *  (c'est-a-dire qu'il ne manquait aucune lettre). Dans ce cas
+                 *  la lettre ajoutee ruine ce premier sous-mot, et le rend
+                 *  insensé, ce qui veut dire que le nombre de resultat (m) est tres inferieur
+                 *  a n (m <= n / 1000). On sait donc que l'on a ajoute une lettre 
+                 *  en trop, et qu'il ne fallait pas ajouter cette lettre.
+                 * 
+                 *  - soit soit notre premier sous-mot (sub) etait un mot incomplet
+                 *  (c'est-a-dire qu'il manquait une/des lettres). Dans ce cas
+                 *  la lettre ajoutee ameliore ce premier sous-mot, et ameliore 
+                 *  son sens, ce qui veut que le nombre de resultat (m) est environ
+                 *  egal a n ( n / 1000 < m ). On sait donc que la lettre ajoutee 
+                 *  est bonne, donc on en ajoute une autre
+                 */
+                
+                Long m = BingSearch.nombreResultats(sub2);
+                System.out.println(sub + ": " + n + "\n" + sub2 + ": " + m + "\n");
                 if ( m <= (n / 1000) )
                     {
+                        // dans ce cas, on coupe car on sait que l'on a
+                        // ajoute un lettre en trop
                         res += phrase.substring(start, end-1) + ' ';
                         break;
                     }
-                    
+                  
+                  // si on a atteint la fin de la phrase, alors on ne peut plus
+                  // ajouter de lettres, donc on coupe  
                 else if (end == l)
                 {
                     res += sub2;
                 }
                 
+                // Pour l'ajout de lettre suivante, il faut prendre en compte 
+                // le nombre de resultats (m) du nouveau sous-mot (sub2) comme reference
                 n = m;
             }
             
+            // une fois la coupure effectuee, on reprend juste apres la 
+            // coupure
             start = end - 1;
-            //end = start + 1;
+           
         
         }
         
-        //res += phrase.substring(start);
+        
         return res;
     }
     
