@@ -49,16 +49,70 @@ public class Dictionnaire
 		
 	}
 	
+	public static boolean isAWord(String s, HashMap hmap)
+	{
+		return (hmap.containsKey(s));
+	}
 	
+	public static boolean isLongerWord(String s, String letter, HashMap hmap)
+	{
+		String word = s + letter;
+		return isAWord(word, hmap);
+	}
+	
+	public static String decoupe(String s, HashMap hmap)
+	{
+		
+			String res = "";
+			int start  = 0;
+			int end    = 1;
+			
+			while (end < s.length())
+			{
+				if (end == (s.length() - 1))// on ne pourra pas faire de decoupage supplementaire, on est à la fin
+				{
+					res += s.substring(start);
+					break;
+				}
+				
+				String sub = s.substring(start, end);
+
+				if (isAWord(sub, hmap))
+				{
+					String letter = s.substring(end, end+1);
+					
+					
+					if (isLongerWord(sub, letter, hmap))
+					{
+						end += 1;
+						break;
+					}
+					
+					else//si on ne peut pas faire de mot plus long en ajoutant une lettre, alors on decoupe
+					{
+						res += sub + " ";
+						start = end;
+						end = start + 1;
+					}
+				}
+				
+				else// on n'a pas de mot, donc on ajoute une lettre
+				{
+					end += 1;
+				}		
+			}
+			
+			return res;
+		
+	}
+		
 	
 	
 	public static void main(String[] args)
 	{
 		HashMap h = createHashmap("FR");
-		System.out.println(h.containsKey("television"));
-		System.out.println(h.containsKey("arbre"));
-		System.out.println(h.containsKey("bientot"));
-		System.out.println(h.containsKey("azasasasdfsqfcs"));
+		String s1 = "bientotnoel";
+		System.out.println(decoupe(s1, h));
 
 	}
 }
