@@ -1,4 +1,6 @@
 import java.util.Vector;
+import java.util.HashMap;
+
 
 /**
  * @author Julien Tissier
@@ -18,7 +20,7 @@ import java.util.Vector;
  * @author Houssam Karrach
  * @version 0.1, ecrit le 1 Novembre 2014
  * 
- * Methode qui decoupe un texte en blocs de 40 caracteres.
+ * Methode qui decoupe un texte en blocs de 60 caracteres.
  * Cette methode prend en compte les emplacements des espaces du message 
  * afin de ne pas couper en plein milieu d'un mot.
  * 
@@ -31,34 +33,34 @@ import java.util.Vector;
 		
        Vector<String> blocs = new Vector<String>();
        
-       //on parcourt l'integralite du texte, 40 caracteres par 40 caracteres
-       for (int start = 0; start < texte.length(); start += 40)
+       //on parcourt l'integralite du texte, 60 caracteres par 60 caracteres
+       for (int start = 0; start < texte.length(); start += 60)
        {
            // il reste plus de 40 caracteres
-           if (start < texte.length() - 40)
+           if (start < texte.length() - 60)
            {
                 // si l'on ne coupe pas au milieu d'un mot, alors on peut decouper
-                if(texte.charAt(start + 39) == ' ')
+                if(texte.charAt(start + 59) == ' ')
                 {
-                    blocs.add(texte.substring(start,start+40));	
+                    blocs.add(texte.substring(start,start+60));	
                 }
                 
                 // sinon on revient au denier espace avant la coupure
                 else
                 {
                     int pos = 1;
-                    while(texte.charAt(start+39-pos) != ' ')
+                    while(texte.charAt(start+59-pos) != ' ')
                     {
                         pos++;
                     }
                	
-                    blocs.add(texte.substring(start,start + 40 - pos));
+                    blocs.add(texte.substring(start,start + 60 - pos));
                     start -= pos; // on reprend au niveau de cette coupure
                 }
            	
            }
             
-            // si il reste moins de 40 caracteres, alors on decoupe 
+            // si il reste moins de 60 caracteres, alors on decoupe 
             // jusqu'a la fin du message
            else
            {
@@ -127,7 +129,7 @@ public static String formateNews(String titre, String source, String date) {
         // Utilise le html pour rendre la news presentable. Le titre sera en gras 
         String element_formate = "<html><b>";
        
-       // oblige de couper le titre sur 40 caracteres, sinon
+       // oblige de couper le titre sur 60 caracteres, sinon
        // il n'y a pas de line wrapping et on est oblige d'utiliser
        // la scrollbar horizontale pour voir l'integralite du titre
        
@@ -147,8 +149,9 @@ public static String formateNews(String titre, String source, String date) {
  * @author Julien Tissier
  * @version 0.1, ecrit le 18 Novembre 2014
  * 
- * Methode qui place des espaces au bon endroit dans une phrase.
- * Par exemple, elle transforme 
+ * Methode qui place des espaces au bon endroit dans une phrase, grace 
+ * au moteur de recherche Bing News
+ * Par exemple, elle transforme "callofduty" en "call of duty"
  * 
  * @param phrase   String  C'est la phrase a laquelle on doit ajouter des espaces
  *  
@@ -227,17 +230,58 @@ public static String formateNews(String titre, String source, String date) {
             // une fois la coupure effectuee, on reprend juste apres la 
             // coupure
             start = end - 1;
-           
-        
         }
-        
-        
-        return res;
+    
+    return res;
     }
     
+    /**
+     * @author Julien Tissier
+     * @version 0.1, ecrit le 30 Novembre
+     * 
+     * Methode supprimant le # d'une tendance, s'il existe.
+     * 
+     * @param s 	String	Tendance dont on veut supprimer le #
+     * @return String		Tendance sans le #
+     */
+     
+    public static String removeHashtag(String s)
+    {
+		return (s.charAt(0) == '#') ? s.substring(1) : s;
+	}
+	
+    /**
+     * @author Julien Tissier
+     * @version 0.1, ecrit le 30 Novembre 2014
+     * 
+     * Methode qui decoupe une string selon les mots qui la composent.
+     * Elle utilise à la fois le dictionnaire anglais et le dictionnaire
+     * francais pour trouver le meilleur decoupage.
+     * 
+     * @param s		String	C'est la String à découper.
+     * 
+     * @return String	Renvoie une string où les mots sont séparés par des espaces
+     */
+     
+    public static String decoupage_dictionnaire(String s)
+    {
+		HashMap fr = Dictionnaire.createHashmap("FR");
+		HashMap en = Dictionnaire.createHashmap("EN");
+		
+		String decoupage_fr = Dictionnaire.decoupe(s, fr);
+		String decoupage_en = Dictionnaire.decoupe(s, en);
+		
+		Long nb_fr = BingSearch.nombreResultats(decoupage_fr);
+		Long nb_en = BingSearch.nombreResultats(decoupage_en);
+		
+		return (nb_fr > nb_en) ? decoupage_fr : decoupage_en;
+	}
+		
     public static void main(String[] args)
     {
-        System.out.println(decoupage_intelligent("callofduty"));
+        System.out.println(decoupage_dictionnaire("joyeuxnoel"));
+        System.out.println(removeHashtag("#lyon"));
+        System.out.println(removeHashtag("paris"));
         
     }
 }
