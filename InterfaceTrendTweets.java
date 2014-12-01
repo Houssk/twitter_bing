@@ -63,11 +63,22 @@ public class InterfaceTrendTweets {
 		JPanel titre_panel = new JPanel();
 		JLabel titre = new JLabel("Liste des tendances");
 		titre_panel.add(titre);
-
-		JPanel button_panel = new JPanel();
+		
+		//panel qui contiendra l'ensemble des boutons
+		// dans la case west : le bouton actualiser
+		// dans la case east : un panel avec les boutons relatifs aux news
+		JPanel buttons_panel = new JPanel();
+		buttons_panel.setLayout(new BorderLayout());
+		
+		
 		JButton actualiser = new JButton("Actualiser");
 		actualiser.setPreferredSize(new Dimension(100, 30));
-		button_panel.add(actualiser);
+		buttons_panel.add(actualiser, BorderLayout.WEST);
+		
+		JPanel boutons_news = new JPanel();
+		JButton recherche_dict = new JButton("Recherche avancee 2");
+		boutons_news.add(recherche_dict);
+		buttons_panel.add(boutons_news, BorderLayout.EAST);
 		
         
         // trois listes avec srollbar : 
@@ -157,7 +168,7 @@ public class InterfaceTrendTweets {
                    }
                    else {
                 	   element_news=" Il n'y a pas de news relatives à cette tendance";
-                	   element_news=Utils.formateTweet("Il n'y a pas de news relatives à cette tendance "+lesTendances.get(index),"");
+                	   element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index),"");
                 	   listeModel_news.addElement(element_news);
                    }
                     }
@@ -232,12 +243,63 @@ public class InterfaceTrendTweets {
         };
         actualiser.addActionListener(actualisation);
                         
+        
+        ActionListener recherche_avancee_dict = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+						// Recupere l'indice de l'item selectionne pour avoir la tendance
+						int index = (int) liste_tendances.getSelectedIndex();
+						String hashtag = lesTendances.get(index);
+						
+						listeModel_news.removeAllElements();
+                        ((Vector<String>) lesNews.get(index)).clear();
                         
+                        
+						
+						String correct_hashtag = Utils.decoupage_dictionnaire(Utils.removeHashtag(hashtag));
+						System.out.println(correct_hashtag);
+						Vector<String> some_news = BingSearch.recupereNews(correct_hashtag);
+                        for (String news : some_news)
+                        {
+							System.out.println(news);
+							((Vector<String>) lesNews.get(index)).add(news);
+						}
+                        
+                        // On va parcourir le vector des news  de la tendance selectionnee
+						int size = ((Vector<String>) lesNews.get(index)).size();
+						String element_news= new String();
+						
+						if (((Vector<String>) lesNews.get(index)).size() != 0)
+						{
+							for (int i = 0; i < size; i = i+3)
+							{
+								String title = ((Vector<String>) lesNews.get(index)).get(i);
+								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
+								String date = ((Vector<String>) lesNews.get(index)).get(i+2);
+								String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+								// Utilise le html pour rendre les tweets presentables. 
+								element_news=Utils.formateNews(title,source,newDate);
+								System.out.println(element_news);
+								// ajoute le titre,source et date a la liste des news
+								listeModel_news.addElement(element_news);
+							}
+						}
+						else 
+						{
+							element_news=" Il n'y a pas de news relatives à cette tendance";
+							element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index) + " meme avec le recherche avancee 2.","");
+							listeModel_news.addElement(element_news);
+						}
+                        
+            }           
+		};
+        recherche_dict.addActionListener(recherche_avancee_dict);              
 
 
         // Placement des differents widgets dans la fenetre
 		global_panel.add(titre_panel, BorderLayout.NORTH);	
-		global_panel.add(button_panel, BorderLayout.SOUTH);
+		global_panel.add(buttons_panel, BorderLayout.SOUTH);
 		global_panel.add(selection_tendances, BorderLayout.WEST);	
 		global_panel.add(selection_tweets, BorderLayout.CENTER);
 		global_panel.add(selection_news, BorderLayout.EAST);
