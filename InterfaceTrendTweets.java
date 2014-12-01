@@ -157,6 +157,7 @@ public class InterfaceTrendTweets {
                    }
                    else {
                 	   element_news=" Il n'y a pas de news relatives à cette tendance";
+                	   element_news=Utils.formateTweet("Il n'y a pas de news relatives à cette tendance "+lesTendances.get(index),"");
                 	   listeModel_news.addElement(element_news);
                    }
                     }
