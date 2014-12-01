@@ -10976,6 +10976,7 @@ hostile
 hostiles
 hostilite
 hostilites
+hot
 hote
 hotel
 hotel de ville
@@ -21566,6 +21567,7 @@ trahir
 trahison
 train
 traine
+traineau
 trainee
 trainent
 trainer
