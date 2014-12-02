@@ -77,6 +77,8 @@ public class InterfaceTrendTweets {
 		
 		JPanel boutons_news = new JPanel();
 		JButton recherche_dict = new JButton("Recherche avancee 2");
+		JButton recherche_maj= new JButton("Recherche avancee 1");
+		boutons_news.add(recherche_maj);
 		boutons_news.add(recherche_dict);
 		buttons_panel.add(boutons_news, BorderLayout.EAST);
 		
@@ -244,6 +246,57 @@ public class InterfaceTrendTweets {
         actualiser.addActionListener(actualisation);
                         
         
+        ActionListener recherche_avancee_maj = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+						// Recupere l'indice de l'item selectionne pour avoir la tendance
+						int index = (int) liste_tendances.getSelectedIndex();
+						String hashtag = lesTendances.get(index);
+						
+						listeModel_news.removeAllElements();
+                        ((Vector<String>) lesNews.get(index)).clear();
+                        
+                        
+						
+						String correct_hashtag = Utils.decouperMaj(hashtag);
+						System.out.println(correct_hashtag);
+						Vector<String> some_news = BingSearch.recupereNews(correct_hashtag);
+                        for (String news : some_news)
+                        {
+							//System.out.println(news);
+							((Vector<String>) lesNews.get(index)).add(news);
+						}
+                        
+                        // On va parcourir le vector des news  de la tendance selectionnee
+						int size = ((Vector<String>) lesNews.get(index)).size();
+						String element_news= new String();
+						
+						if (((Vector<String>) lesNews.get(index)).size() != 0)
+						{
+							for (int i = 0; i < size; i = i+3)
+							{
+								String title = ((Vector<String>) lesNews.get(index)).get(i);
+								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
+								String date = ((Vector<String>) lesNews.get(index)).get(i+2);
+								String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+								// Utilise le html pour rendre les tweets presentables. 
+								element_news=Utils.formateNews(title,source,newDate);
+								//System.out.println(element_news);
+								// ajoute le titre,source et date a la liste des news
+								listeModel_news.addElement(element_news);
+							}
+						}
+						else 
+						{
+							element_news=" Il n'y a pas de news relatives à cette tendance";
+							element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index) + " meme avec la recherche avancee 1.","");
+							listeModel_news.addElement(element_news);
+						}
+                        
+            }           
+		};
+        recherche_maj.addActionListener(recherche_avancee_maj); 
         ActionListener recherche_avancee_dict = new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -262,7 +315,7 @@ public class InterfaceTrendTweets {
 						Vector<String> some_news = BingSearch.recupereNews(correct_hashtag);
                         for (String news : some_news)
                         {
-							System.out.println(news);
+							//System.out.println(news);
 							((Vector<String>) lesNews.get(index)).add(news);
 						}
                         
@@ -280,7 +333,7 @@ public class InterfaceTrendTweets {
 								String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
 								// Utilise le html pour rendre les tweets presentables. 
 								element_news=Utils.formateNews(title,source,newDate);
-								System.out.println(element_news);
+								//System.out.println(element_news);
 								// ajoute le titre,source et date a la liste des news
 								listeModel_news.addElement(element_news);
 							}
@@ -294,7 +347,7 @@ public class InterfaceTrendTweets {
                         
             }           
 		};
-        recherche_dict.addActionListener(recherche_avancee_dict);              
+        recherche_dict.addActionListener(recherche_avancee_dict);
 
 
         // Placement des differents widgets dans la fenetre
