@@ -171,9 +171,9 @@ public class Dictionnaire
 	 * @return String	La string de départ correctement découpée
 	 */
 	 
-	public static String decoupe(String s, HashMap hmap)
+	public static String decoupe(String phrase, HashMap hmap)
 	{
-		
+		String s = phrase.toLowerCase();		
 		String res = ""; // variable de sortie
 		int start  = 0; // on commence a decouper a partir de la premiere lettre
 		int end    = 1;
@@ -194,7 +194,6 @@ public class Dictionnaire
 				 */
 				String sub = s.substring(start, end);
 				String letters = s.substring(end);
-				
 				/* On cherche le plus grand mot qu'il est possible de 
 				 * creer, et on l'ajoute à res
 				 */
@@ -212,14 +211,14 @@ public class Dictionnaire
 	}
 		
 	/*		T E S T
-	 * 
+	 */ 
 	
 	public static void main(String[] args)
 	{
-		HashMap h = createHashmap("FR");
-		String s1 = "ceciestuntestdedecoupage";
+		HashMap h = createHashmap("EN");
+		String s1 = "Happybirthday";
 		System.out.println(decoupe(s1, h));
 
 	}
-	*/
+	/**/
 }

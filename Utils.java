@@ -33,28 +33,29 @@ import java.lang.Character;
 		
        Vector<String> blocs = new Vector<String>();
        
-       //on parcourt l'integralite du texte, 60 caracteres par 60 caracteres
-       for (int start = 0; start < texte.length(); start += 60)
+       //on parcourt l'integralite du texte, 45 caracteres par 45 caracteres
+       for (int start = 0; start < texte.length(); start += 45)
        {
-           // il reste plus de 40 caracteres
-           if (start < texte.length() - 60)
+           // il reste plus de 60 caracteres
+           if (start < texte.length() - 45)
            {
+			   
                 // si l'on ne coupe pas au milieu d'un mot, alors on peut decouper
-                if(texte.charAt(start + 59) == ' ')
+                if(texte.charAt(start + 44) == ' ')
                 {
-                    blocs.add(texte.substring(start,start+60));	
+                    blocs.add(texte.substring(start,start+45));	
                 }
                 
-                // sinon on revient au denier espace avant la coupure
+                // sinon on revient au dernier espace avant la coupure
                 else
                 {
                     int pos = 1;
-                    while(texte.charAt(start+59-pos) != ' ')
+                    while(texte.charAt(start+44-pos) != ' ')
                     {
                         pos++;
                     }
                	
-                    blocs.add(texte.substring(start,start + 60 - pos));
+                    blocs.add(texte.substring(start,start + 45 - pos));
                     start -= pos; // on reprend au niveau de cette coupure
                 }
            	
@@ -64,6 +65,7 @@ import java.lang.Character;
             // jusqu'a la fin du message
            else
            {
+			  
               blocs.add(texte.substring(start));
            }
          }
@@ -322,7 +324,8 @@ public static String formateNews(String titre, String source, String date) {
 	
     public static void main(String[] args)
     {
-        System.out.println(decoupage_dictionnaire("joyeuxnoel"));
+        	
+		System.out.println(decoupage_dictionnaire("lahotdenoel"));
         System.out.println(removeHashtag("#lyon"));
         System.out.println(removeHashtag("paris"));
         System.out.println(decouperMaj("###HoussamKarrachCeciEstUNTestDeLaTendanceMTVStar"));
