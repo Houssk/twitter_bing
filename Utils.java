@@ -270,11 +270,11 @@ public static String formateNews(String titre, String source, String date) {
 		HashMap fr = Dictionnaire.createHashmap("FR");
 		HashMap en = Dictionnaire.createHashmap("EN");
 		
-		String decoupage_fr = Dictionnaire.decoupe(s, fr);
-		String decoupage_en = Dictionnaire.decoupe(s, en);
+		String decoupage_fr = Dictionnaire.advancedDecoupe(s, fr);
+		String decoupage_en = Dictionnaire.advancedDecoupe(s, en);
 		
-		Long nb_fr = BingSearch.nombreResultats(decoupage_fr);
-		Long nb_en = BingSearch.nombreResultats(decoupage_en);
+		double nb_fr = Dictionnaire.nombreMoyenLettres(decoupage_fr);
+		double nb_en = Dictionnaire.nombreMoyenLettres(decoupage_en);
 		
 		return (nb_fr > nb_en) ? decoupage_fr : decoupage_en;
 	}
@@ -325,7 +325,9 @@ public static String formateNews(String titre, String source, String date) {
     public static void main(String[] args)
     {
         	
-		System.out.println(decoupage_dictionnaire("lahotdenoel"));
+		System.out.println(decoupage_dictionnaire("traineauLDLC"));
+		System.out.println(decoupage_dictionnaire("joyeuxnoel"));
+		System.out.println(decoupage_dictionnaire("merryChristmas"));
         System.out.println(removeHashtag("#lyon"));
         System.out.println(removeHashtag("paris"));
         System.out.println(decouperMaj("###HoussamKarrachCeciEstUNTestDeLaTendanceMTVStar"));
