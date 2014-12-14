@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.Normalizer;
+import java.util.Vector;
 import java.util.HashMap;
 
 /**
@@ -160,6 +160,152 @@ public class Dictionnaire
 	
 	/**
 	 * @author Julien Tissier
+	 * @version 0.1, ecrit le 14 Decembre 2014
+	 * 
+	 * Methode trouvant tous les mots qui sont un sous-mot du mot passé 
+	 * en paramètre. Par exemple, pour le mot information, les sous-mots
+	 * sont : in, informa, informat, information
+	 * 
+	 * @param s		String	C'est le mot dont on cherche les sous-mots
+	 * @param hmap	HashMap	Le dictionnaire dans lequel on cherche
+	 * 
+	 * @return 	Vector<String> L'ensemble des sous-mots trouvés
+	 */
+	public static Vector<String> findAllWords(String word, HashMap hmap)
+	{
+		Vector<String> res = new Vector<String>();
+		
+		// on parcout les lettres du mot une a une
+		for (int i = 0; i < word.length(); i++)
+		{
+			// on cree le sous-mot commencant a la lettre 0 et se 
+			// terminant a la lettre i
+			String sub = word.substring(0, i+1);
+			//System.out.println(sub);
+			// on regarde si ce mot est valide
+			if (isAWord(sub, hmap))
+			{
+				res.add(sub);
+			}
+			
+		}
+			
+		return res;
+	}
+	
+	/**
+	 * @author Julien Tissier
+	 * @version 0.1, ecrit le 14 Decembre 2014
+	 * 
+	 * Methode comptant le nombre moyen de lettres par mot.
+	 * 
+	 * @param mot		String	La phrase dans laquelle on calcule le
+	 * 							nombre moyen de mots
+	 * 
+	 * @return 	double	Nombre moyen de lettres par mot
+	 */
+	public static double nombreMoyenLettres(String mot)
+	{
+		//on separe les mots grace aux espaces
+		String[] split = mot.split("\\s+");
+		double nbChar = 0;
+		double nbWord = 0;
+		// nombre moyen de lettres = (nombre total de lettres) / (nombre de mots)
+		for (String s : split)
+		{
+			nbChar += s.length();
+			nbWord += 1;
+		}
+		
+		return nbChar/nbWord;
+	}
+	
+	/**
+	 * @author Julien Tissier
+	 * @version 0.1, ecrit le 14 Decembre 2014
+	 * 
+	 * Methode indiquant quel decoupage est le plus approprie. L'algorithme 
+	 * choisit celui qui a le plus grand nombre moyen de lettres par mot
+	 * 
+	 * @param Vector<String> decoupages	L'ensemble des decoupages a tester
+	 * 
+	 * @return 	String 	Le decoupage ayant le meilleur ratio nombredeLettres / nombreDeMots
+	 */
+	public static String meilleurDecoupage(Vector<String> decoupages)
+	{
+		//int lowestNumberSpaces = 100;
+		double averageLetters = 0;
+		String meilleur = "";
+		
+		// on parcourt tous les decoupages, et on calcule pour chacun le 
+		// nombre moyen de lettres par mot
+		for (String s : decoupages)
+		{
+			//System.out.println(s);
+			/*if ( (s.length() - s.replace(" ", "").length()) <= lowestNumberSpaces )
+			{
+				lowestNumberSpaces = s.length() - s.replace(" ", "").length();
+				meilleur = s;
+			}*/
+			if ( nombreMoyenLettres(s) >= averageLetters)
+			{
+				averageLetters = nombreMoyenLettres(s);
+				meilleur = s; // on ne retient que le meilleur
+			}
+		}
+		
+		return meilleur;
+	}
+	
+	/**
+	 * @author Julien Tissier
+	 * @version 0.1, ecrit le 14 Decembre 2014
+	 * 
+	 * Methode decoupant une tendance a partir d'un dictionnaire.
+	 * Methode recursive
+	 * 
+	 * @param phrase		String	C'est la tendance que l'on veut decouper
+	 * @param hmap	HashMap	Le dictionnaire avec lequel on decoupe
+	 * 
+	 * @return 	String 	La tendance decoupee
+	 */
+	public static String advancedDecoupe(String phrase, HashMap hmap)
+	{
+		String s = phrase.toLowerCase();
+		
+
+		if (s.length() == 0)
+		{
+				return s;
+		}
+		/* si la tendance a decouper n'est pas la chaine vide. 
+		* On cherche tous les sous-mots de la tendances. Pour chacun de
+		* ces sous-mots, on cherche le meilleur decoupage parmi les 
+		* lettres restantes. Cela forme un decoupage possible.
+		* On renvoie le meilleur decoupage parmi ces decoupages formes
+		* a partir des sous-mots.
+		*/
+		else
+		{
+			Vector<String> tmp = new Vector<String>();
+			for (String sub : findAllWords(s, hmap))
+			{
+				//System.out.println("les mots " + findAllWords(s, hmap));
+				//System.out.println(sub);
+				int l = sub.length();
+				tmp.add(sub + " " + advancedDecoupe(s.substring(l), hmap));
+				//System.out.println(tmp);
+				
+			}
+			
+			return meilleurDecoupage(tmp);
+		}	
+		
+	}
+			
+		
+	/**
+	 * @author Julien Tissier
 	 * @version 0.1, ecrit le 30 Novembre 2014
 	 * 
 	 * Methode qui decoupe une String selon les mots qui la composent.
@@ -215,9 +361,25 @@ public class Dictionnaire
 	
 	public static void main(String[] args)
 	{
-		HashMap h = createHashmap("EN");
-		String s1 = "Happybirthday";
-		System.out.println(decoupe(s1, h));
+		HashMap h = createHashmap("FR");
+		/*Vector<String> t = new Vector<String>();
+		t.add(" l a allez ly o n");
+		t.add("alle z lyon");
+		t.add("allez lyon");
+		t.add("allezl yon");*/
+		
+		String s1 = "onvasortir";
+		String s2 = "joyeuxnoel";
+		String s3 = "bientotlesvacances";
+		String s4 = "francetelevision";
+		String s5 = "OMOL";
+		//System.out.println(findAllWords(s1, h));
+		//System.out.println(meilleurDecoupage(t));
+		System.out.println(advancedDecoupe(s1, h));
+		System.out.println(advancedDecoupe(s2, h));
+		System.out.println(advancedDecoupe(s3, h));
+		System.out.println(advancedDecoupe(s4, h));
+		System.out.println(advancedDecoupe(s5, h));
 
 	}
 	/**/
