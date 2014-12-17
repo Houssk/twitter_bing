@@ -6,6 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
+import java.awt.Desktop;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -155,7 +157,7 @@ public class InterfaceTrendTweets {
                     int size2 = ((Vector<String>) lesNews.get(index)).size();
                     String element_news= new String();
                    if(((Vector<String>) lesNews.get(index)).size()!=0){
-                    for (int i = 0; i < size2; i = i+3)
+                    for (int i = 0; i < size2; i = i+4)
                     {
                         String title = ((Vector<String>) lesNews.get(index)).get(i);
                         String source = ((Vector<String>) lesNews.get(index)).get(i+1);
@@ -274,7 +276,7 @@ public class InterfaceTrendTweets {
 						
 						if (((Vector<String>) lesNews.get(index)).size() != 0)
 						{
-							for (int i = 0; i < size; i = i+3)
+							for (int i = 0; i < size; i = i+4)
 							{
 								String title = ((Vector<String>) lesNews.get(index)).get(i);
 								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
@@ -325,7 +327,7 @@ public class InterfaceTrendTweets {
 						
 						if (((Vector<String>) lesNews.get(index)).size() != 0)
 						{
-							for (int i = 0; i < size; i = i+3)
+							for (int i = 0; i < size; i = i+4)
 							{
 								String title = ((Vector<String>) lesNews.get(index)).get(i);
 								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
@@ -350,6 +352,39 @@ public class InterfaceTrendTweets {
         recherche_dict.addActionListener(recherche_avancee_dict);
 
 
+		MouseListener doubleclicNews = new MouseAdapter() 
+        {
+		    public void mouseClicked(MouseEvent e) 
+            {
+		        if (e.getClickCount() == 2) 
+                {
+                    
+                    int index_tendance = (int) liste_tendances.getSelectedIndex();
+                    int index_news = (int) liste_news.getSelectedIndex();
+                   
+					Vector<String> lesNewsDeLaTendance = ((Vector<String>) lesNews.get(index_tendance));
+					
+                    String url = new String();
+                    url = lesNewsDeLaTendance.get(index_news*4 + 3); //recupere l'url en quatrieme case du vecteur
+                    
+					System.out.println(url);
+					
+					try
+					{
+						//System.out.println(java.net.URI.create(url));
+						Desktop.getDesktop().browse(java.net.URI.create(url));
+					}
+					catch (IOException except)
+					{
+						except.printStackTrace();
+					}
+                }
+                    
+              }
+		};
+		liste_news.addMouseListener(doubleclicNews);
+		
+		
         // Placement des differents widgets dans la fenetre
 		global_panel.add(titre_panel, BorderLayout.NORTH);	
 		global_panel.add(buttons_panel, BorderLayout.SOUTH);
