@@ -65,6 +65,7 @@ public class BingSearch {
 			lesNews.add(result.getTitle());
 			lesNews.add(result.getSource());
 			lesNews.add(result.getDate());
+			lesNews.add(result.getUrl());
 		}
         
 		return lesNews;
@@ -104,7 +105,7 @@ public class BingSearch {
     
 	/*      T E S T
      * 
-     * public static void main(String[] args) {
+     */ public static void main(String[] args) {
 		
         Vector<String> l = recupereNews("Noel");
         for(String s : l)
@@ -114,5 +115,5 @@ public class BingSearch {
         
         System.out.println("Nombre de resultats : " + nombreResultats("Noel"));
 		
-	}*/
+	}/**/
 }
