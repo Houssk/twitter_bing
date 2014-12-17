@@ -362,21 +362,22 @@ public class Dictionnaire
 	public static void main(String[] args)
 	{
 		HashMap h = createHashmap("FR");
+		HashMap en = createHashmap("EN");
 		/*Vector<String> t = new Vector<String>();
 		t.add(" l a allez ly o n");
 		t.add("alle z lyon");
 		t.add("allez lyon");
 		t.add("allezl yon");*/
 		
-		String s1 = "onvasortir";
-		String s2 = "joyeuxnoel";
-		String s3 = "bientotlesvacances";
-		String s4 = "francetelevision";
-		String s5 = "OMOL";
+		String s1 = "EnjoyChristmas";
+		String s2 = "PeopleWhoMadeMy2014";
+		String s3 = "MUNLIV";
+		String s4 = "OGCNASSE";
+		String s5 = "NoelAvecLeFarfadet";
 		//System.out.println(findAllWords(s1, h));
 		//System.out.println(meilleurDecoupage(t));
-		System.out.println(advancedDecoupe(s1, h));
-		System.out.println(advancedDecoupe(s2, h));
+		System.out.println(advancedDecoupe(s1, en));
+		System.out.println(advancedDecoupe(s2, en));
 		System.out.println(advancedDecoupe(s3, h));
 		System.out.println(advancedDecoupe(s4, h));
 		System.out.println(advancedDecoupe(s5, h));
