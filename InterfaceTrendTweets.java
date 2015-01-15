@@ -1,5 +1,6 @@
 package tse.fi2.info4.tbek;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -8,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
+import java.awt.Desktop;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -157,12 +160,12 @@ public class InterfaceTrendTweets {
                     int size2 = ((Vector<String>) lesNews.get(index)).size();
                     String element_news= new String();
                    if(((Vector<String>) lesNews.get(index)).size()!=0){
-                    for (int i = 0; i < size2; i = i+3)
+                    for (int i = 0; i < size2; i = i+4)
                     {
                         String title = ((Vector<String>) lesNews.get(index)).get(i);
                         String source = ((Vector<String>) lesNews.get(index)).get(i+1);
                         String date = ((Vector<String>) lesNews.get(index)).get(i+2);
-                        String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+                        String newDate=date.substring(0, 10)+" Ã  "+ date.substring(11, 19);
                        // Utilise le html pour rendre les tweets presentables. 
                         element_news=Utils.formateNews(title,source,newDate);
                         // ajoute le titre,source et date a la liste des news
@@ -171,8 +174,8 @@ public class InterfaceTrendTweets {
                     }
                    }
                    else {
-                	   element_news=" Il n'y a pas de news relatives à cette tendance";
-                	   element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index),"");
+                	   element_news=" Il n'y a pas de news relatives Ã  cette tendance";
+                	   element_news=Utils.formateTweet("Il n'y a pas de news relatives Ã  "+lesTendances.get(index),"");
                 	   listeModel_news.addElement(element_news);
                    }
                     }
@@ -184,7 +187,7 @@ public class InterfaceTrendTweets {
         
         // A chaque fois que l'on clique sur le bouton Actualiser, on 
         // doit verifier s'il y a des nouvelles tendances. Si c'est le
-        // cas, on met à jour la liste des tendances, la liste des 
+        // cas, on met Ã  jour la liste des tendances, la liste des 
         // tweets et news pour chaque nouvelle tendance, et les affichages de 
         // ces deux listes
         ActionListener actualisation = new ActionListener()
@@ -276,12 +279,12 @@ public class InterfaceTrendTweets {
 						
 						if (((Vector<String>) lesNews.get(index)).size() != 0)
 						{
-							for (int i = 0; i < size; i = i+3)
+							for (int i = 0; i < size; i = i+4)
 							{
 								String title = ((Vector<String>) lesNews.get(index)).get(i);
 								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
 								String date = ((Vector<String>) lesNews.get(index)).get(i+2);
-								String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+								String newDate=date.substring(0, 10)+" Ã  "+ date.substring(11, 19);
 								// Utilise le html pour rendre les tweets presentables. 
 								element_news=Utils.formateNews(title,source,newDate);
 								//System.out.println(element_news);
@@ -291,8 +294,8 @@ public class InterfaceTrendTweets {
 						}
 						else 
 						{
-							element_news=" Il n'y a pas de news relatives à cette tendance";
-							element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index) + " meme avec la recherche avancee 1.","");
+							element_news=" Il n'y a pas de news relatives Ã  cette tendance";
+							element_news=Utils.formateTweet("Il n'y a pas de news relatives Ã  "+lesTendances.get(index) + " meme avec la recherche avancee 1.","");
 							listeModel_news.addElement(element_news);
 						}
                         
@@ -327,12 +330,12 @@ public class InterfaceTrendTweets {
 						
 						if (((Vector<String>) lesNews.get(index)).size() != 0)
 						{
-							for (int i = 0; i < size; i = i+3)
+							for (int i = 0; i < size; i = i+4)
 							{
 								String title = ((Vector<String>) lesNews.get(index)).get(i);
 								String source = ((Vector<String>) lesNews.get(index)).get(i+1);
 								String date = ((Vector<String>) lesNews.get(index)).get(i+2);
-								String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+								String newDate=date.substring(0, 10)+" Ã  "+ date.substring(11, 19);
 								// Utilise le html pour rendre les tweets presentables. 
 								element_news=Utils.formateNews(title,source,newDate);
 								//System.out.println(element_news);
@@ -342,8 +345,8 @@ public class InterfaceTrendTweets {
 						}
 						else 
 						{
-							element_news=" Il n'y a pas de news relatives à cette tendance";
-							element_news=Utils.formateTweet("Il n'y a pas de news relatives à "+lesTendances.get(index) + " meme avec le recherche avancee 2.","");
+							element_news=" Il n'y a pas de news relatives Ã  cette tendance";
+							element_news=Utils.formateTweet("Il n'y a pas de news relatives Ã  "+lesTendances.get(index) + " meme avec le recherche avancee 2.","");
 							listeModel_news.addElement(element_news);
 						}
                         
@@ -352,6 +355,39 @@ public class InterfaceTrendTweets {
         recherche_dict.addActionListener(recherche_avancee_dict);
 
 
+		MouseListener doubleclicNews = new MouseAdapter() 
+        {
+		    public void mouseClicked(MouseEvent e) 
+            {
+		        if (e.getClickCount() == 2) 
+                {
+                    
+                    int index_tendance = (int) liste_tendances.getSelectedIndex();
+                    int index_news = (int) liste_news.getSelectedIndex();
+                   
+					Vector<String> lesNewsDeLaTendance = ((Vector<String>) lesNews.get(index_tendance));
+					
+                    String url = new String();
+                    url = lesNewsDeLaTendance.get(index_news*4 + 3); //recupere l'url en quatrieme case du vecteur
+                    
+					System.out.println(url);
+					
+					try
+					{
+						//System.out.println(java.net.URI.create(url));
+						Desktop.getDesktop().browse(java.net.URI.create(url));
+					}
+					catch (IOException except)
+					{
+						except.printStackTrace();
+					}
+                }
+                    
+              }
+		};
+		liste_news.addMouseListener(doubleclicNews);
+		
+		
         // Placement des differents widgets dans la fenetre
 		global_panel.add(titre_panel, BorderLayout.NORTH);	
 		global_panel.add(buttons_panel, BorderLayout.SOUTH);
@@ -371,3 +407,4 @@ public class InterfaceTrendTweets {
     }
 
 }
+

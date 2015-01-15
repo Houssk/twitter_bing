@@ -24,10 +24,10 @@ public class Dictionnaire
 	 * 
 	 * Methode creant un dictionnaire de mots sous la forme d'une table 
 	 * de hachage. Il faut bien evidemment que les mots soient stockes
-	 * dans des fichiers txt. Chaque fichier txt correspond à l'ensemble
+	 * dans des fichiers txt. Chaque fichier txt correspond Ã  l'ensemble
 	 * des mots d'une langue.
 	 * 
-	 * @param langue 	String	On specifie la langue désirée : FR ou EN
+	 * @param langue 	String	On specifie la langue dÃ©sirÃ©e : FR ou EN
 	 * 
 	 * @return HashMap<Key, Value>	Elle renvoie une hashmap contenant 
 	 * 						l'ensemble des mots de la langue choisie. 
@@ -42,15 +42,15 @@ public class Dictionnaire
 		String filename = null;
 		int size = 1;
 			
-			/* Selon la langue choisie, le fichier txt utilisé n'est pas le même.
-			 * Pour eviter d'avoir à elargir la table de hachage lors du
-			 * remplissage, il est preferable de connaitre le nombre d'éléments 
+			/* Selon la langue choisie, le fichier txt utilisÃ© n'est pas le mÃªme.
+			 * Pour eviter d'avoir Ã  elargir la table de hachage lors du
+			 * remplissage, il est preferable de connaitre le nombre d'Ã©lÃ©ments 
 			 * que l'on va inserer.
 			 */
 			if (langue.equals("FR"))
 			{
 				filename = "dict_FR.txt";
-				size = 22740;
+				size = 339000;
 			}
 		
 			else if (langue.equals("EN"))
@@ -108,7 +108,7 @@ public class Dictionnaire
 	 * @version 0.1, ecrit le 30 Novembre 2014
 	 * 
 	 * Methode indiquant si on obtient un mot valable en ajoutant une lettre
-	 * au mot passé en paramètre.
+	 * au mot passÃ© en paramÃ¨tre.
 	 * 
 	 * @param s		String		Le mot auquel on ajoute une lettre
 	 * @param letter	String	La lettre ajoutee
@@ -132,7 +132,7 @@ public class Dictionnaire
 	 * @version 0.1, ecrit le 30 Novembre 2014
 	 * 
 	 * Methode trouvant le mot le plus long qu'il est possible de faire
-	 * en ajoutant des lettres au mot passé en paramètre.
+	 * en ajoutant des lettres au mot passÃ© en paramÃ¨tre.
 	 * 
 	 * @param s		String		Le mot auquel on ajoute des lettres
 	 * @param letters	String	L'ensemble des lettres qu'on peut ajouter
@@ -145,12 +145,12 @@ public class Dictionnaire
 		String tmp = word;// tmp est le mot auquel on va ajouter les lettres
 		String res = word;// res est le mot valable le plus long
 		
-		// on parcourt l'ensemble des lettres, pour les ajouter une à une
+		// on parcourt l'ensemble des lettres, pour les ajouter une Ã  une
 		for(int i = 0; i < letters.length(); i++)
 		{
 			tmp += letters.charAt(i); //on ajoute la lettre
 			
-			if (isAWord(tmp, hmap)) //si le mot formé est valable..
+			if (isAWord(tmp, hmap)) //si le mot formÃ© est valable..
 			{
 				//.. alors il est plus long que word, donc potentiellement le plus long
 				res = tmp;
@@ -164,14 +164,14 @@ public class Dictionnaire
 	 * @author Julien Tissier
 	 * @version 0.1, ecrit le 14 Decembre 2014
 	 * 
-	 * Methode trouvant tous les mots qui sont un sous-mot du mot passé 
-	 * en paramètre. Par exemple, pour le mot information, les sous-mots
+	 * Methode trouvant tous les mots qui sont un sous-mot du mot passÃ© 
+	 * en paramÃ¨tre. Par exemple, pour le mot information, les sous-mots
 	 * sont : in, informa, informat, information
 	 * 
 	 * @param s		String	C'est le mot dont on cherche les sous-mots
 	 * @param hmap	HashMap	Le dictionnaire dans lequel on cherche
 	 * 
-	 * @return 	Vector<String> L'ensemble des sous-mots trouvés
+	 * @return 	Vector<String> L'ensemble des sous-mots trouvÃ©s
 	 */
 	public static Vector<String> findAllWords(String word, HashMap hmap)
 	{
@@ -313,10 +313,10 @@ public class Dictionnaire
 	 * Methode qui decoupe une String selon les mots qui la composent.
 	 * Par exemple, transforme "bientotnoel" en "bientot noel".
 	 * 
-	 * @param s 	String	La string à découper.
+	 * @param s 	String	La string Ã  dÃ©couper.
 	 * @param hmap	HashMap	Le dictionnaire sur lequel on se base pour decouper.
 	 * 
-	 * @return String	La string de départ correctement découpée
+	 * @return String	La string de dÃ©part correctement dÃ©coupÃ©e
 	 */
 	 
 	public static String decoupe(String phrase, HashMap hmap)
@@ -326,11 +326,11 @@ public class Dictionnaire
 		int start  = 0; // on commence a decouper a partir de la premiere lettre
 		int end    = 1;
 	
-		while (end < s.length()) //jusqu'à atteindre la fin de s
+		while (end < s.length()) //jusqu'Ã  atteindre la fin de s
 		{
 			if (end == (s.length() - 1)) // dans ce cas, on ne peut pas effectuer de decoupage supplementaire
 			{
-				res += s.substring(start); // on ajoute l'ensemble des caractères restant à res
+				res += s.substring(start); // on ajoute l'ensemble des caractÃ¨res restant Ã  res
 				break;
 			}
 				
@@ -343,12 +343,12 @@ public class Dictionnaire
 				String sub = s.substring(start, end);
 				String letters = s.substring(end);
 				/* On cherche le plus grand mot qu'il est possible de 
-				 * creer, et on l'ajoute à res
+				 * creer, et on l'ajoute Ã  res
 				 */
 				String word = findLongerWord(sub, letters, hmap);
 				res += word + " ";
 				
-				// on reprend le decoupage au niveau de ce mot trouvé	
+				// on reprend le decoupage au niveau de ce mot trouvÃ©	
 				start = start + word.length();
 				end = start + 1;
 			}		

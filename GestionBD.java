@@ -155,6 +155,8 @@ public class GestionBD
 	                   " titre           TEXT    NOT NULL, " + 
 	                   " contenu           BLOB    NOT NULL, " +
 	                   " id_user            INTEGER     DEFAULT NULL, " + 
+	                   " source           TEXT    NOT NULL, " +
+	                   " date           TEXT    DEFAULT NULL, " +
 	                   "FOREIGN KEY(id_user) REFERENCES Utilisateur(id))" ; 
 		      
 		      stmt.executeUpdate(sql);
@@ -217,9 +219,9 @@ public class GestionBD
 	 * 
 	 * 
 	 */
-	static void inserer_page(int id_user,String titre) throws SQLException, IOException{
+	static void inserer_page(int id_user,String titre,String source,String date) throws SQLException, IOException{
 		Connection myConn = connexion_bd();
-		String sql = "insert into  page (titre,contenu,id_user) values(?,?,?)";
+		String sql = "insert into  page (titre,contenu,id_user,source,date) values(?,?,?,?,?)";
 		myStmt = myConn.prepareStatement(sql);
 		File theFile = new File("tbek/"+titre);
 		input = getBytesFromFile(theFile);
@@ -227,6 +229,8 @@ public class GestionBD
 		myStmt.setBytes(2, input);
 		//myStmt.setBlob(2, input);
 		myStmt.setInt(3, id_user);
+		myStmt.setString(4, source);
+		myStmt.setString(5, date);
 		System.out.println("Reading input file: " + theFile.getAbsolutePath());
 		
 		// 4. Execute statement
@@ -252,7 +256,7 @@ public class GestionBD
 		Connection myConn= connexion_bd();
 		stmt = myConn.createStatement();
 		Vector<String> mesLiens= new Vector<String>();
-		String sql="select id_page,titre,contenu from page where id_user="+id_user;
+		String sql="select id_page,titre,contenu,source,date from page where id_user="+id_user;
 		myRs = stmt.executeQuery(sql);
 		
 		// 3. Set up a handle to the file
@@ -263,6 +267,8 @@ public class GestionBD
 			Integer id_page=myRs.getInt("id_page");
 			String id_page1=id_page.toString();
 			String titre= myRs.getString("titre");
+			String source= myRs.getString("source");
+			String date= myRs.getString("date");
 			File theFile = new File("tbek/"+titre);
 			output = new FileOutputStream(theFile);
 
@@ -275,6 +281,8 @@ public class GestionBD
 			String url =theFile.getAbsolutePath();
 			mesLiens.add(url);
 			mesLiens.add(id_page1);
+			mesLiens.add(source);
+			mesLiens.add(date);
 			i++;
 		}
 		close(myConn, stmt);

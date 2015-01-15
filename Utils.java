@@ -1,5 +1,6 @@
 package tse.fi2.info4.tbek;
 
+
 import java.util.Vector;
 import java.util.HashMap;
 import java.lang.Character; 
@@ -31,49 +32,93 @@ import java.lang.Character;
  * @return  Vector<String>     Elle renvoie un vector de String. Chaque 
  *                              String est une partie decoupee du texte
  */
-    public static Vector<String> decouper(String texte) {
+	 public static Vector<String> decouper(String texte,int n) {
+			
+	       Vector<String> blocs = new Vector<String>();
+	       
+	       //on parcourt l'integralite du texte, n caracteres par n caracteres
+	       for (int start = 0; start < texte.length(); start += n)
+	       {
+	           // il reste plus de 60 caracteres
+	           if (start < texte.length() - n)
+	           {
+				   
+	                // si l'on ne coupe pas au milieu d'un mot, alors on peut decouper
+	                if(texte.charAt(start + (n-1)) == ' ')
+	                {
+	                    blocs.add(texte.substring(start,start+n));	
+	                }
+	                
+	                // sinon on revient au dernier espace avant la coupure
+	                else
+	                {
+	                    int pos = 1;
+	                    while(texte.charAt(start+(n-1)-pos) != ' ')
+	                    {
+	                        pos++;
+	                    }
+	               	
+	                    blocs.add(texte.substring(start,start + n - pos));
+	                    start -= pos; // on reprend au niveau de cette coupure
+	                }
+	           	
+	           }
+	            
+	            // si il reste moins de n caracteres, alors on decoupe 
+	            // jusqu'a la fin du message
+	           else
+	           {
+				  
+	              blocs.add(texte.substring(start));
+	           }
+	         }
+	       
+	       return blocs;
+		}
+    
+    public static Vector<String> decouperTitrePage(String texte) {
 		
-       Vector<String> blocs = new Vector<String>();
-       
-       //on parcourt l'integralite du texte, 45 caracteres par 45 caracteres
-       for (int start = 0; start < texte.length(); start += 45)
-       {
-           // il reste plus de 60 caracteres
-           if (start < texte.length() - 45)
-           {
-			   
-                // si l'on ne coupe pas au milieu d'un mot, alors on peut decouper
-                if(texte.charAt(start + 44) == ' ')
-                {
-                    blocs.add(texte.substring(start,start+45));	
-                }
-                
-                // sinon on revient au dernier espace avant la coupure
-                else
-                {
-                    int pos = 1;
-                    while(texte.charAt(start+44-pos) != ' ')
-                    {
-                        pos++;
-                    }
-               	
-                    blocs.add(texte.substring(start,start + 45 - pos));
-                    start -= pos; // on reprend au niveau de cette coupure
-                }
-           	
-           }
-            
-            // si il reste moins de 60 caracteres, alors on decoupe 
-            // jusqu'a la fin du message
-           else
-           {
-			  
-              blocs.add(texte.substring(start));
-           }
-         }
-       
-       return blocs;
-	}
+        Vector<String> blocs = new Vector<String>();
+        
+        //on parcourt l'integralite du texte, 150 caracteres par 150 caracteres
+        for (int start = 0; start < texte.length(); start += 150)
+        {
+            // il reste plus de 60 caracteres
+            if (start < texte.length() - 150)
+            {
+ 			   
+                 // si l'on ne coupe pas au milieu d'un mot, alors on peut decouper
+                 if(texte.charAt(start + 149) == ' ')
+                 {
+                     blocs.add(texte.substring(start,start+150));	
+                 }
+                 
+                 // sinon on revient au dernier espace avant la coupure
+                 else
+                 {
+                     int pos = 1;
+                     while(texte.charAt(start+149-pos) != ' ')
+                     {
+                         pos++;
+                     }
+                	
+                     blocs.add(texte.substring(start,start + 150 - pos));
+                     start -= pos; // on reprend au niveau de cette coupure
+                 }
+            	
+            }
+             
+             // si il reste moins de 60 caracteres, alors on decoupe 
+             // jusqu'a la fin du message
+            else
+            {
+ 			  
+               blocs.add(texte.substring(start));
+            }
+          }
+        
+        return blocs;
+ 	}
     
     
 /**
@@ -100,7 +145,7 @@ import java.lang.Character;
        // il n'y a pas de line wrapping et on est oblige d'utiliser
        // la scrollbar horizontale pour voir l'integralite du message
        
-       Vector<String> message_decoupe = decouper(message);
+       Vector<String> message_decoupe = decouper(message,48);
        for (String s : message_decoupe)
        {
            element_formate += s + "<br>";
@@ -137,7 +182,7 @@ public static String formateNews(String titre, String source, String date) {
        // il n'y a pas de line wrapping et on est oblige d'utiliser
        // la scrollbar horizontale pour voir l'integralite du titre
        
-       Vector<String> titre_decoupe = decouper(titre);
+       Vector<String> titre_decoupe = decouper(titre,48);
        for (String s : titre_decoupe)
        {
            element_formate += s + "<br>";
@@ -149,6 +194,62 @@ public static String formateNews(String titre, String source, String date) {
        return element_formate;
        
 	}
+public static String formatePage(String titre, String source, String date) {
+	
+    // Utilise le html pour rendre la news presentable. Le titre sera en gras 
+    String element_formate = "<html><b>";
+   
+   // oblige de couper le titre sur 60 caracteres, sinon
+   // il n'y a pas de line wrapping et on est oblige d'utiliser
+   // la scrollbar horizontale pour voir l'integralite du titre
+   
+   Vector<String> titre_decoupe = decouperTitrePage(titre);
+   for (String s : titre_decoupe)
+   {
+       element_formate += s + "<br>";
+   }
+     
+    // la source est en vert, la date en gris fonce et italique
+    element_formate += "</b><font color=#00A050>" + source + "</font></br><br><i><font color=#6E7170>" + date + "<br></font></i><br></html>";
+    
+   return element_formate;
+   
+}
+
+/**
+ * @author Nader Ben Abdeljelil
+ * @version 0.1, ecrit le 10 Janvier 2015
+ * 
+ * Methode qui formate une reponse au format html, afin de la rendre 
+ * plus presentable dans l'interface graphique
+ * 
+ * @param message   String  C'est le message a decouper
+ *  
+ * @return  String      Elle renvoie un message au format html,  qui 
+ *                      permet de visualiser de maniere correcte la 
+ *                      reponse de la question
+ */
+
+public static String formateReponse(String message) {
+	
+    // Utilise le html pour rendre la reponse presentable. 
+    String element_formate = "<html><b>";
+   
+   // oblige de couper les messages sur 75 caracteres, sinon
+   // il n'y a pas de line wrapping et on est oblige d'utiliser
+   // la scrollbar horizontale pour voir l'integralite du message
+   
+   Vector<String> message_decoupe = decouper(message,55);
+   for (String s : message_decoupe)
+   {
+       element_formate += s + "<br>";
+   }
+   
+        
+   element_formate += "<br></font></html>";
+   return element_formate;
+}
+
 /**
  * @author Julien Tissier
  * @version 0.1, ecrit le 18 Novembre 2014
@@ -197,7 +298,7 @@ public static String formateNews(String titre, String source, String date) {
                  *  - soit notre premier sous-mot (sub) etait un mot entier
                  *  (c'est-a-dire qu'il ne manquait aucune lettre). Dans ce cas
                  *  la lettre ajoutee ruine ce premier sous-mot, et le rend
-                 *  insensé, ce qui veut dire que le nombre de resultat (m) est tres inferieur
+                 *  insensÃ©, ce qui veut dire que le nombre de resultat (m) est tres inferieur
                  *  a n (m <= n / 1000). On sait donc que l'on a ajoute une lettre 
                  *  en trop, et qu'il ne fallait pas ajouter cette lettre.
                  * 
@@ -259,12 +360,12 @@ public static String formateNews(String titre, String source, String date) {
      * @version 0.1, ecrit le 30 Novembre 2014
      * 
      * Methode qui decoupe une string selon les mots qui la composent.
-     * Elle utilise à la fois le dictionnaire anglais et le dictionnaire
+     * Elle utilise Ã  la fois le dictionnaire anglais et le dictionnaire
      * francais pour trouver le meilleur decoupage.
      * 
-     * @param s		String	C'est la String à découper.
+     * @param s		String	C'est la String Ã  dÃ©couper.
      * 
-     * @return String	Renvoie une string où les mots sont séparés par des espaces
+     * @return String	Renvoie une string oÃ¹ les mots sont sÃ©parÃ©s par des espaces
      */
      
     public static String decoupage_dictionnaire(String s)
@@ -287,11 +388,11 @@ public static String formateNews(String titre, String source, String date) {
 	 * @author Ayoub el fatmi
 	 * @version 0.1, ecrit le 29 Decembre 2014
 	 * 
-	 * Méthode qui decoupe une tendance s'il est composée de plusieurs
+	 * MÃ©thode qui decoupe une tendance s'il est composÃ©e de plusieurs
 	 * mots qui commencent par une majuscule
 	 * @param tendance   String  C'est le contenu de la tendance
 	 * 
-	 * @return  String      Elle renvoie une chaine de caractère
+	 * @return  String      Elle renvoie une chaine de caractÃ¨re
 	 *                      
 	 */
 	
@@ -302,13 +403,16 @@ public static String formateNews(String titre, String source, String date) {
 			tendance=tendance.substring(i+1);
 		}
 		String resultat="";
-		String resultat1="";
+		String dernier= tendance.substring(tendance.length()-1);
+		System.out.println(dernier);
+		String new_tendance=tendance.substring(0, tendance.length()-1);
+		System.out.println(new_tendance);
 		// la fonction tendance.split("(?<=[a-z])(?=[A-Z])") permet de 
-		// chercher des lettres minuscules après une lettre majuscule
+		// chercher des lettres minuscules aprÃ¨s une lettre majuscule
 		// pour composer un mot
 		// la fonction ignore s'il y a 2 majuscules qui se suivent
 		
-		for (String mot: tendance.split("(?<=[a-z])(?=[A-Z])")) { 
+		for (String mot: new_tendance.split("(?<=[a-z])(?=[A-Z])")) { 
 		      int count=0;
 		      // le cas ou 2 ou plusieurs majuscules se suivent
 		      for(int i=1; i<mot.length();i++){
@@ -321,17 +425,20 @@ public static String formateNews(String titre, String source, String date) {
 		      }
 		      resultat=resultat+mot+" ";
 		 }
+		resultat=resultat.substring(0, resultat.length()-1);
+		resultat=resultat+dernier;
 		return resultat;
 	}
 	
     public static void main(String[] args)
     {
         	
-		System.out.println(decoupage_dictionnaire("traineauLDLC"));
-		System.out.println(decoupage_dictionnaire("joyeuxnoel"));
-		System.out.println(decoupage_dictionnaire("merryChristmas"));
-        System.out.println(removeHashtag("#lyon"));
-        System.out.println(removeHashtag("paris"));
-        System.out.println(decouperMaj("###HoussamKarrachCeciEstUNTestDeLaTendanceMTVStar"));
+//		System.out.println(decoupage_dictionnaire("traineauLDLC"));
+//		System.out.println(decoupage_dictionnaire("joyeuxnoel"));
+//		System.out.println(decoupage_dictionnaire("merryChristmas"));
+//        System.out.println(removeHashtag("#lyon"));
+//        System.out.println(removeHashtag("paris"));
+        System.out.println(decouperMaj("###HoussamKarrachCeciEstUNTestDeLa15TendanceMTVStarKlkoOp"));
     }
 }
+

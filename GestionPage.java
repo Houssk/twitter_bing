@@ -15,12 +15,15 @@ import java.sql.Statement;
 import java.util.Vector;
 
 
+
 /**
  * 
- *   On utilise plus cette clase 
+ *   On n'utilise plus cette classe 
  * 
  * 
  */
+
+
 /**
  * @author Houssam Karrach
  * @author Ayoub el fatmi

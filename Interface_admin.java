@@ -2,6 +2,7 @@ package tse.fi2.info4.tbek;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -19,6 +20,9 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import tse.fi2.info4.tbek.Aide;
+
 
 public class Interface_admin extends JFrame{
 
@@ -41,6 +45,7 @@ public class Interface_admin extends JFrame{
     JTabbedPane onglets = new JTabbedPane(SwingConstants.TOP);
     JPanel pannel = new JPanel();
     static JPanel onglet2 = new JPanel();
+    JPanel onglet3 = new JPanel();
     JPanel p1 = new JPanel();
 	JPanel global_panel = new JPanel();
 	JPanel bande_sup = new JPanel();
@@ -48,6 +53,7 @@ public class Interface_admin extends JFrame{
 	JButton deconnexion = new JButton();
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
+	Thread t= new Thread() ;
 	
 	private void initComponents() throws SQLException, IOException {
 	
@@ -91,6 +97,8 @@ public class Interface_admin extends JFrame{
 	            	f.setTitle("projet tbek");
 	            	f.add(p);
 	            	f.validate();
+	            	t.stop();
+	            	System.out.println("statut"+t.getState());
 	            }
 	        });
 			
@@ -140,7 +148,8 @@ public class Interface_admin extends JFrame{
 			gestion.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent evt) {
 	            	try {
-						Interface_gestion g=new Interface_gestion();
+						Interface_gestion f=new Interface_gestion();
+						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -426,26 +435,40 @@ public class Interface_admin extends JFrame{
 		                String url = new String();
 		                url = lesNewsDeLaTendance.get(index_news*4 + 3); //recupere l'url en quatrieme case du vecteur
 		                System.out.println(url);
+		                final String url1= url;
 		                String fileName = new String();
+		                String source = new String();
+		                String date = new String();
 		                fileName = lesNewsDeLaTendance.get(index_news*4); //recupe le titre
+		                source = lesNewsDeLaTendance.get(index_news*4+1);
+		                date = lesNewsDeLaTendance.get(index_news*4+2);
 		                fileName=fileName.replace(' ', '_');
+		                fileName=fileName.replace('?', '_');
 		                System.out.println(fileName);
-		                
-						String titre=PDFConvertisseur.sauvergardeArticle(url, fileName);
-						try {
-							GestionBD.inserer_page(Panel_acc.id_user, titre);
-						} catch (FileNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						 // On recupere les nouvelles tendances
-						catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+		                final String title= fileName;
+		                final String date1= date;
+		                final String source1= source;
+		                f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		                JOptionPane.showMessageDialog(null," Sauvegarde en cours ... ","Sauvegarde en cours",JOptionPane.INFORMATION_MESSAGE);
+		                t= new Thread()  {
+		            		public void run() {
+		            			try {
+		            				String titre=PDFConvertisseur.sauvergardeArticle(url1, title);
+		            				GestionBD.inserer_page(Panel_acc.id_user,titre ,source1,date1);
+		    						JOptionPane.showMessageDialog(null,"Article sauvegardé avec succès ","Sauvegarde",JOptionPane.INFORMATION_MESSAGE);
+
+		            		} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							 // On recupere les nouvelles tendances
+							catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 		                
 						onglet2.removeAll();
 						try {
@@ -460,8 +483,12 @@ public class Interface_admin extends JFrame{
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						JOptionPane.showMessageDialog(null,"Article sauvegardé avec succès ","Sauvegarde",JOptionPane.INFORMATION_MESSAGE);
-					}
+						//JOptionPane.showMessageDialog(null,"Article sauvegardé avec succès ","Sauvegarde",JOptionPane.INFORMATION_MESSAGE);
+		            		}
+		        		};
+		        		t.start();
+		        		f.setCursor(Cursor.getDefaultCursor());
+		            }
 				};
 					sauvegarder.addActionListener(sauvegarde_article);
 				
@@ -514,13 +541,17 @@ public class Interface_admin extends JFrame{
 		    p1.add(bande_sup);
 		    p1.add(global_panel);
 		    
-		    onglets.addTab("Accueil", p1);
+		    onglets.addTab("Trends", p1);
 		    
 		    onglet2.setPreferredSize(new Dimension(1000, 350));
 		    JPanel sauvegarde =new Panel_Sauvegarde();
 		    sauvegarde.setPreferredSize(new Dimension(1000, 300));
 		    onglet2.add(sauvegarde);
 		    onglets.addTab("Sauvegarde", onglet2);
+		    JPanel p_aide =new Aide();
+		    p_aide.setPreferredSize(new Dimension(1000, 350));
+		    onglet3.add(p_aide);
+		    onglets.addTab("Aide", onglet3);
 		    onglets.setOpaque(true);
 		    pannel.add(onglets);
 			f.setSize(1010, 400);

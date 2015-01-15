@@ -21,10 +21,10 @@ public class Interface_gestion extends JFrame {
 	static Connection con = null;
 	static Statement s = null;
 	static ResultSet resultat=null;
-	final JFrame f = new JFrame("Gestion des Utilisateurs");
+	//final JFrame f =new JFrame("Gestion des Utilisateurs");
 	static JTable tableau = new JTable ();
-	static JPanel global_panel = new JPanel();
-	static JScrollPane selection_tendances = new JScrollPane(tableau);
+	JPanel global_panel = new JPanel();
+	JScrollPane selection_tendances = new JScrollPane(tableau);
 	public Interface_gestion() {
         initComponents();
     }
@@ -33,7 +33,7 @@ public class Interface_gestion extends JFrame {
 	
   
 		// Creation de la fenetre ainsi que de tous les elements la composant		
-		//final JFrame f = new JFrame("Gestion des Utilisateurs");
+		final JFrame f = new JFrame("Gestion des Utilisateurs");
 		global_panel.setLayout(new BorderLayout());
 
 		JPanel titre_panel = new JPanel();
@@ -135,7 +135,7 @@ public class Interface_gestion extends JFrame {
             public void actionPerformed(ActionEvent e) 
             {    
             	f.setVisible(false);
-            	//interface_admin ad =new interface_admin();
+            	//Interface_admin ad =new Interface_admin();
             }
         };
 	    
@@ -145,17 +145,17 @@ public class Interface_gestion extends JFrame {
             {
 		        if (e.getClickCount() == 1) 
                 {
-		              try {
-					
-					    JScrollPane selection_tendances = new JScrollPane(MyTableModel.actualisation());
-					    selection_tendances.setPreferredSize(new Dimension(500,260));
-					    tableau.validate();
-					
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        	
+//		              try {
+//					
+//					    JScrollPane selection_tendances = new JScrollPane(MyTableModel.actualisation());
+//					    selection_tendances.setPreferredSize(new Dimension(500,260));
+//					    tableau.validate();
+//					
+//					} catch (SQLException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//		        	
 		        	
 		        	int ligneSelectionne = tableau.getSelectedRow();
 		        	//on r�cup�re la valeur  de la ligne s�lectionn�
@@ -376,11 +376,12 @@ public class Interface_gestion extends JFrame {
 		global_panel.add(selection_tendances, BorderLayout.WEST);	
 		global_panel.add(ajouter, BorderLayout.CENTER);
 		global_panel.add(supp, BorderLayout.EAST);
-	
+
+		f.setSize(980, 220);
+		f.add(global_panel);
+		pack();
 		f.setVisible(true);	
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.add(global_panel);
-		f.setSize(980, 220);
 		f.setLocationRelativeTo(null);
 
        

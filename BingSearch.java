@@ -16,9 +16,10 @@ import net.billylieurance.azuresearch.AbstractAzureSearchQuery.AZURESEARCH_FORMA
  * recuperer les news d'une tendance, grace a une methode de 
  * asuresearch
  */
+
 public class BingSearch {
 	
-    private static final String ACCOUNT_KEY = "oLnzdYxQ+FfGVysn751kjLkO5GPkWzb5yILRH33G908";
+    private static final String ACCOUNT_KEY = "6fPir8YBrfF1uZ3+GiBUQxwXEMYSAER755bM6UUFSk4";
     
 /**
  * @author Houssam Karrach
@@ -89,7 +90,7 @@ public class BingSearch {
         // initialisation des parametres necessaires a l'envoi de la requete Bing
         AzureSearchCompositeQuery requete = new AzureSearchCompositeQuery();
         // cle d'authentification
-        requete.setAppid("oLnzdYxQ+FfGVysn751kjLkO5GPkWzb5yILRH33G908");
+        requete.setAppid("6fPir8YBrfF1uZ3+GiBUQxwXEMYSAER755bM6UUFSk4");
         // on ne souhaite avoir que des news en francais
         requete.setMarket("fr-FR");
         // on indique le mot a chercher
@@ -105,9 +106,7 @@ public class BingSearch {
         return result.getNewsTotal();
     }
     
-	/*      T E S T
-     * 
-     * public static void main(String[] args) {
+	 public static void main(String[] args) {
 		
         Vector<String> l = recupereNews("Noel");
         for(String s : l)
@@ -116,6 +115,7 @@ public class BingSearch {
         }
         
         System.out.println("Nombre de resultats : " + nombreResultats("Noel"));
-		
-	}*/
+        
+	}
 }
+

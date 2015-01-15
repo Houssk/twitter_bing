@@ -16,6 +16,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import tse.fi2.info4.tbek.*;
 
+
 public class Panel_acc extends JPanel{  
 /**
  * @author Julien Tissier
@@ -34,8 +35,11 @@ public class Panel_acc extends JPanel{
 	
 	static // Creation de la fenetre ainsi que de tous les elements la composant		
 			JFrame f = new JFrame("projet tbek");
+			JTabbedPane onglets = new JTabbedPane(SwingConstants.TOP);
+			JPanel pannel = this;
+			JPanel onglet2 = new JPanel();
 			JPanel global_panel = new JPanel();
-			JPanel p1 =this;
+			JPanel p1 =new JPanel();
 			
 			JPanel identification = new JPanel();
 			GroupLayout identificationLayout = new GroupLayout(identification);
@@ -281,9 +285,21 @@ public class Panel_acc extends JPanel{
      		global_panel.add(selection_tweets, BorderLayout.CENTER);
      		global_panel.add(selection_news, BorderLayout.EAST);
      		
+     		onglets.setPreferredSize(new Dimension(1000, 300));
+     		p1.setPreferredSize(new Dimension(1000, 300));
      	    p1.setLayout(new BoxLayout(p1, BoxLayout.PAGE_AXIS));
      	    p1.add(identification);
      	    p1.add(global_panel);
+     	    
+     	    onglets.addTab("Trends", p1);
+		    
+		    onglet2.setPreferredSize(new Dimension(1000, 350));
+		    JPanel p_aide =new Aide();
+		    p_aide.setPreferredSize(new Dimension(1000, 300));
+		    onglet2.add(p_aide);
+		    onglets.addTab("Aide", onglet2);
+		    onglets.setOpaque(true);
+		    pannel.add(onglets);
      	    
      	   return nom;
 	}

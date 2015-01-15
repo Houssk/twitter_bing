@@ -1,4 +1,6 @@
+
 package tse.fi2.info4.tbek;
+
 
 import it.grabz.grabzit.*;
 
@@ -6,7 +8,7 @@ import it.grabz.grabzit.*;
  * @author Julien Tissier
  * @version 0.1, ecrit le 17 Decembre 2014
  * 
- * Classe faisant le lien avec la biblioth�que GrabzIt 
+ * Classe faisant le lien avec la bibliothèque GrabzIt 
  * et permettant d'enregistrer une page web au format PDF
  */
 
@@ -23,28 +25,30 @@ public class PDFConvertisseur
 	 * 
 	 */
 	 
-	public static String sauvergardeArticle(String url, String fileName)
-	{
-		try
+	 
+		public static String sauvergardeArticle(String url, String fileName)
 		{
-			//connexion au serveur qui nous convertira la page web en 
-			//fichier PDF. Acces restreint, besoin des codes 
-			//d'authentification
-			GrabzItClient grabzIt = new GrabzItClient("YjNmNjRlMTQ3NTc2NDg1OTg3NmI3M2ExYTQxNGQ5MzM=", "Pz8yKkMYNFR7Zz9QPyQUJD8/Pz8SPyYFMT9qXz8/Pz8=");
-			
-			// on indique l'url � sauvegarder
-			grabzIt.SetPDFOptions(url);
-			
-			// on indique le nom sous lequel on veut sauvegarder
-			fileName=fileName+".pdf";
-			grabzIt.SaveTo("tbek/"+fileName);
+			try
+			{
+				//connexion au serveur qui nous convertira la page web en 
+				//fichier PDF. Acces restreint, besoin des codes 
+				//d'authentification
+				GrabzItClient grabzIt = new GrabzItClient("YjNmNjRlMTQ3NTc2NDg1OTg3NmI3M2ExYTQxNGQ5MzM=", "Pz8yKkMYNFR7Zz9QPyQUJD8/Pz8SPyYFMT9qXz8/Pz8=");
+				
+				// on indique l'url � sauvegarder
+				grabzIt.SetPDFOptions(url);
+				
+				// on indique le nom sous lequel on veut sauvegarder
+				fileName=fileName+".pdf";
+				grabzIt.SaveTo("tbek/"+fileName);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			return fileName;
 		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		return fileName;
-	}
+			
 		
 		
 		
@@ -56,3 +60,4 @@ public class PDFConvertisseur
 		
 	}
 }
+

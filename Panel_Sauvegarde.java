@@ -108,9 +108,20 @@ public class Panel_Sauvegarde extends JPanel{
 		selection_fichier.setViewportView(liste_fichier);
 		selection_fichier.setPreferredSize(new Dimension(300,260));
 		int size= lesPages.size();
-		for(int i=0;i<size;i=i+3){
+		String element_page= new String();
+		for(int i=0;i<size;i=i+5){
 			 
-		   listeModel_fichier.addElement(lesPages.get(i));
+			
+				String title = lesPages.get(i);
+				title=title.replace('_', ' ');
+				String source = lesPages.get(i+3);
+				String date = lesPages.get(i+4);
+				String newDate=date.substring(0, 10)+" à "+ date.substring(11, 19);
+				// Utilise le html pour rendre les tweets presentables. 
+				element_page=Utils.formatePage(title,source,newDate);
+				
+			
+		   listeModel_fichier.addElement(element_page);
 		}
 		
 		 ActionListener supprimer_pdf = new ActionListener()
@@ -134,8 +145,8 @@ public class Panel_Sauvegarde extends JPanel{
 	            	    if(opt==0)
 	            	     {
 							int index = (int) liste_fichier.getSelectedIndex();
-							String page= lesPages.get(index*3);
-							String id_page=lesPages.get(index*3+2);
+							String page= lesPages.get(index*5);
+							String id_page=lesPages.get(index*5+2);
 							Integer id_page1;
 							Integer.parseInt(id_page);
 							File file = new File("tbek/"+page);
@@ -198,7 +209,7 @@ public class Panel_Sauvegarde extends JPanel{
                 {
 		        	int index = (int) liste_fichier.getSelectedIndex();
 		        	String url = new String();
-		        	url=lesPages.get(index*2+1);
+		        	url=lesPages.get(index*5+1);
 		        	try {
 		        		Desktop.getDesktop().open(new File(url));
 						//Desktop.getDesktop().browse(java.net.URI.create(url));

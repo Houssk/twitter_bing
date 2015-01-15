@@ -57,8 +57,9 @@ public class Interface_acc extends JFrame{
 		f.setVisible(true);	
  		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  		f.add(p);
- 		f.setSize(1000, 300);
+ 		f.setSize(1010, 350);
  		f.setLocationRelativeTo(null);
+ 		
 		
        // initComponents();
     }

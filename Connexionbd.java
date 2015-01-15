@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 /**
  * 
- *   On n'utilise plus cette clase 
+ *   On n'utilise plus cette classe 
  * 
  * 
  */
